@@ -71,7 +71,7 @@ void triangle(SDL_Renderer* render, Vec2i a, Vec2i b, Vec2i c, Color color) {
 
     if (a.y > b.y) swap(a, b);
     if (a.y > c.y) swap(a, c);
-    if (b.y > c.y) swap(b, c)
+    if (b.y > c.y) swap(b, c);
     
     int x1, x2;
 
@@ -148,7 +148,7 @@ int main() {
     SDL_SetRenderDrawColor(render, 255, 255, 255, 255);
     
     
-    /*auto f = freopen("/home/coucco/3d_engine_on_c/src/obj/african_head.obj", "r", stdin);
+    auto f = freopen("/home/coucco/3d_engine_on_c/src/obj/african_head.obj", "r", stdin);
     
     string s, t;
     vector<Vertex> vertices;
@@ -169,7 +169,7 @@ int main() {
             Vec3i triangle = {i1, i2, i3};
             triangles.push_back(triangle);
         }
-    }*/
+    }
 
     /*for (auto k : vertices) {
         cout << k.a << " " << k.b << " " << k.c << endl;    // проверка парсера
@@ -196,13 +196,58 @@ int main() {
         draw_line(render, x0, y0, x1, y1);
     }*/
 
-    Vec2i a1 = {20, 20}, b1 = {120, 10}, c1 = {101, 30};
-    Color gray = {128, 128, 128};
-    triangle(render, a1, b1, c1, gray);
-    Vec2i a2 = {120, 120}, b2 = {180, 120}, c2 = {160, 290};
-    triangle(render, a2, b2, c2, gray);
-    Vec2i a3 = {1000, 20}, b3 = {1000, 120}, c3 = {800, 20};
-    triangle(render, a3, b3, c3, gray);
+    int x0, y0, x1, y1, x2, y2;
+    for (int i = 0; i < size(triangles); ++i) {
+        x0 = (vertices[triangles[i].x].x + 1.) * width/2.;
+        y0 = height - (vertices[triangles[i].x].y + 1.) * height/2.;
+        x1 = (vertices[triangles[i].y].x + 1.) * width/2.;
+        y1 = height - (vertices[triangles[i].y].y + 1.) * height/2.;
+        x2 = (vertices[triangles[i].z].x + 1.) * width/2.;
+        y2 = height - (vertices[triangles[i].z].y + 1.) * height/2.;
+        Vec2i v1 = {x0, y0}, v2 = {x1, y1}, v3 = {x2, y2};
+
+        long double x0_world = vertices[triangles[i].x].x;
+        long double y0_world = vertices[triangles[i].x].y;
+        long double z0_world = vertices[triangles[i].x].z;
+
+        long double x1_world = vertices[triangles[i].y].x;
+        long double y1_world = vertices[triangles[i].y].y;
+        long double z1_world = vertices[triangles[i].y].z;
+
+        long double x2_world = vertices[triangles[i].z].x;
+        long double y2_world = vertices[triangles[i].z].y;
+        long double z2_world = vertices[triangles[i].z].z;
+
+        long double x0_delta = x2_world - x0_world;
+        long double x1_delta = x1_world - x0_world;
+
+        long double y0_delta = y2_world - y0_world;
+        long double y1_delta = y1_world - y0_world;
+
+        long double z0_delta = z2_world - z0_world;
+        long double z1_delta = z1_world - z0_world;
+
+        long double nx = y0_delta * z1_delta - y1_delta * z0_delta;
+        long double ny = z0_delta * x1_delta - x0_delta * z1_delta;
+        long double nz = x0_delta * y1_delta - x1_delta * y0_delta;
+
+        long double norm = sqrt(nx * nx + ny * ny + nz * nz);
+
+        nx /= norm;
+        ny /= norm;
+        nz /= norm;
+
+        long double l1 = 0.;
+        long double l2 = 0.;
+        long double l3 = -1.;
+
+        long double intensity = l1 * nx + l2 * ny + l3 * nz;
+        if(intensity > 0) {
+            Uint8 r = intensity * 255 * 0.7, g = intensity * 255 * 0.7, b = intensity * 255 * 0.7;
+            Color color = {r, g, b};
+            triangle(render, v1, v2, v3, color);
+        }
+    }
 
     SDL_RenderPresent(render);
     while (!quit) {
