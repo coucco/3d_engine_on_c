@@ -10,6 +10,11 @@ struct Vec3i{
     int z;
 };
 
+struct Vec2i{
+    int x;
+    int y;
+};
+
 struct Vertex{
     long double x;
     long double y;
@@ -54,22 +59,48 @@ void draw_line(SDL_Renderer* render, int x1, int y1, int x2, int y2) {
     }
 }
 
-/*void triangle(Vec2i t0, Vec2i t1, Vec2i t2, TGAImage &image, TGAColor color) {
-    if (t0.y>t1.y) std::swap(t0, t1);
-    if (t0.y>t2.y) std::swap(t0, t2);
-    if (t1.y>t2.y) std::swap(t1, t2);
+void triangle(SDL_Renderer* render, Vec2i a, Vec2i b, Vec2i c) {
+    if (a.y > b.y) swap(a, b);
+    if (a.y > c.y) swap(a, c);
+    if (b.y > c.y) swap(b, c);
 
-    int total_height = t2.y-t0.y;
-    for (int y=t0.y; y<=t1.y; y++) {
-        int segment_height = t1.y-t0.y+1;
-        float alpha = (float)(y-t0.y)/total_height;
-        float beta  = (float)(y-t0.y)/segment_height;
-        Vec2i A = t0 + (t2-t0)*alpha;
-        Vec2i B = t0 + (t1-t0)*beta;
-        image.set(A.x, y, red);
-        image.set(B.x, y, green);
+    //a
+    //b
+    //c
+
+    for(int y = a.y; y <= b.y; ++y) {
+        /*a -> b
+        a.y = k * a.x + b
+        b.y = k * b.x + b
+
+        a.y - b.y = k * (a.x - b.x)
+        */
+
+        float k = (a.y - b.y) / (a.x - b.x);
+        float b = a.y - a.x * k;
+
+        /*a -> c
+        a.y = k1 * a.x + b1
+        c.y = k1 * c.x + b1
+        */
+
+        float k1 = (a.y - c.y) / (a.x - c.x);
+        float b1 = a.y - a.x * k1;
+
+        /*y = kx1 + b
+        y = k1x2 + b1
+
+        x1 = (y - b) / k
+        x2 = (y - b1) / k1
+        */
+
+        float x1 = (y - b) / k;
+        float x2 = (y - b1) / k1;
+        for(int x = x1; x <= x2; ++x){
+            SDL_RenderDrawPoint(render, x, y);
+        }
     }
-}*/
+}
 
 int main() {
 
@@ -83,7 +114,7 @@ int main() {
     SDL_SetRenderDrawColor(render, 255, 255, 255, 255);
     
     
-    auto f = freopen("/home/coucco/3d_engine_on_c/src/obj/african_head.obj", "r", stdin);
+    /*auto f = freopen("/home/coucco/3d_engine_on_c/src/obj/african_head.obj", "r", stdin);
     
     string s, t;
     vector<Vertex> vertices;
@@ -104,7 +135,7 @@ int main() {
             Vec3i triangle = {i1, i2, i3};
             triangles.push_back(triangle);
         }
-    }
+    }*/
 
     /*for (auto k : vertices) {
         cout << k.a << " " << k.b << " " << k.c << endl;    // проверка парсера
@@ -116,7 +147,7 @@ int main() {
         cout << k.x << " " << k.y << " " << k.z << endl;
     }*/
 
-    int x0, y0, x1, y1;
+    /*int x0, y0, x1, y1;
     for (int i = 0; i < size(triangles); ++i) {
         x0 = (vertices[triangles[i].x].x + 1.) * width/2.;
         y0 = height - (vertices[triangles[i].x].y + 1.) * height/2.;
@@ -129,7 +160,10 @@ int main() {
         x0 = (vertices[triangles[i].y].x + 1.) * width/2.;
         y0 = height - (vertices[triangles[i].y].y + 1.) * height/2.;
         draw_line(render, x0, y0, x1, y1);
-    }
+    }*/
+
+    Vec2i a1 = {20, 20}, b1 = {100, 100}, c1 = {30, 80};
+    triangle(render, a1, b1, c1);
 
     SDL_RenderPresent(render);
     while (!quit) {
