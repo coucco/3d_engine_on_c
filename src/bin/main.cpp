@@ -15,6 +15,13 @@ struct Vec2i{
     int y;
 };
 
+struct Vec4f{
+    long double a;
+    long double b;
+    long double c;
+    long double d;
+};
+
 struct Vertex{
     long double x;
     long double y;
@@ -27,8 +34,9 @@ struct Color{
     Uint8 b;
 };
 
-int width = 1080;
-int height = 1080;
+const int width = 800;
+const int height = 800;
+const int depth = 255;
 
 void draw_line(SDL_Renderer* render, int x1, int y1, int x2, int y2) {
     SDL_SetRenderDrawColor(render, 255, 255, 255, 255);
@@ -65,8 +73,17 @@ void draw_line(SDL_Renderer* render, int x1, int y1, int x2, int y2) {
     }
 }
 
-void triangle(SDL_Renderer* render, Vec2i a, Vec2i b, Vec2i c, Color color) {
+Vec4f plane_equation_solve(Vec3i p1, Vec3i p2, Vec3i p3){
+    long double A = (p2.y - p1.y) * (p3.z - p1.z) - (p2.z - p1.z) * (p3.y - p1.y);
+    long double B = -((p2.x - p1.x) * (p3.z - p1.z) - (p2.z - p1.z) * (p3.x - p1.x));
+    long double C = (p2.x - p1.x) * (p3.y - p1.y) - (p2.y - p1.y) * (p3.x - p1.x);
+    long double D = -(A * p1.x + B * p1.y + C * p1.z);
+    Vec4f ans = {A, B, C, D};
+    return ans;
+}
 
+void triangle(SDL_Renderer* render, Vec3i a, Vec3i b, Vec3i c, Color color, long double *zbuffer) {
+    
     SDL_SetRenderDrawColor(render, color.r, color.g, color.b, 255);
 
     if (a.y > b.y) swap(a, b);
@@ -74,6 +91,8 @@ void triangle(SDL_Renderer* render, Vec2i a, Vec2i b, Vec2i c, Color color) {
     if (b.y > c.y) swap(b, c);
     
     int x1, x2;
+
+    Vec4f koef_plane = plane_equation_solve(a, b, c);
 
     for(int y = a.y; y <= b.y; ++y) {
         if(a.x != b.x){
@@ -100,8 +119,13 @@ void triangle(SDL_Renderer* render, Vec2i a, Vec2i b, Vec2i c, Color color) {
             swap(x1, x2);
 
         for(int x = x1; x <= x2; ++x){
-            if(x <= width && y <= height && x >=0 && y >= 0)
-                SDL_RenderDrawPoint(render, x, y);
+            if(x <= width && y <= height && x >=0 && y >= 0){
+                long double z = (-koef_plane.a*x - koef_plane.b*y - koef_plane.d) / (long double)koef_plane.c;
+                if(zbuffer[x + y * width] < z){
+                    zbuffer[x + y * width] = z;
+                    SDL_RenderDrawPoint(render, x, y);
+                }
+            }
         }
     }
     
@@ -130,8 +154,13 @@ void triangle(SDL_Renderer* render, Vec2i a, Vec2i b, Vec2i c, Color color) {
             swap(x1, x2);
 
         for(int x = x1; x <= x2; ++x){
-            if(x <= width && y <= height && x >=0 && y >= 0)
-                SDL_RenderDrawPoint(render, x, y);
+            if(x <= width && y <= height && x >=0 && y >= 0){
+                long double z = (-koef_plane.a*x - koef_plane.b*y - koef_plane.d) / (long double)koef_plane.c;
+                if(zbuffer[x + y * width] < z){
+                    zbuffer[x + y * width] = z;
+                    SDL_RenderDrawPoint(render, x, y);
+                }
+            }
         }
     }
 }
@@ -171,6 +200,11 @@ int main() {
         }
     }
 
+    long double *zbuffer = new long double[width*height + width];
+    for(int i = 0; i < width*height; ++i){
+        zbuffer[i] = -INT_MAX / 100.;
+    }
+
     /*for (auto k : vertices) {
         cout << k.a << " " << k.b << " " << k.c << endl;    // проверка парсера
     }
@@ -196,15 +230,22 @@ int main() {
         draw_line(render, x0, y0, x1, y1);
     }*/
 
-    int x0, y0, x1, y1, x2, y2;
+    int x0, y0, z0, x1, y1, z1, x2, y2, z2;
     for (int i = 0; i < size(triangles); ++i) {
+
         x0 = (vertices[triangles[i].x].x + 1.) * width/2.;
         y0 = height - (vertices[triangles[i].x].y + 1.) * height/2.;
+        z0 = (vertices[triangles[i].x].z + 1.) * depth/2.;
+
         x1 = (vertices[triangles[i].y].x + 1.) * width/2.;
         y1 = height - (vertices[triangles[i].y].y + 1.) * height/2.;
+        z1 = (vertices[triangles[i].y].z + 1.) * depth/2.;
+
         x2 = (vertices[triangles[i].z].x + 1.) * width/2.;
         y2 = height - (vertices[triangles[i].z].y + 1.) * height/2.;
-        Vec2i v1 = {x0, y0}, v2 = {x1, y1}, v3 = {x2, y2};
+        z2 = (vertices[triangles[i].z].z + 1.) * depth/2.;
+
+        Vec3i v1 = {x0, y0, z0}, v2 = {x1, y1, z1}, v3 = {x2, y2, z2};
 
         long double x0_world = vertices[triangles[i].x].x;
         long double y0_world = vertices[triangles[i].x].y;
@@ -245,9 +286,19 @@ int main() {
         if(intensity > 0) {
             Uint8 r = intensity * 255 * 0.7, g = intensity * 255 * 0.7, b = intensity * 255 * 0.7;
             Color color = {r, g, b};
-            triangle(render, v1, v2, v3, color);
+            triangle(render, v1, v2, v3, color, zbuffer);
         }
     }
+
+    /*for(int i = 0; i < width*height; ++i){
+        long double inten = zbuffer[i] / (long double)depth;  // zbuffer check
+        Uint8 r, g, b;
+        r = 255 * inten;
+        g = 255 * inten;
+        b = 255 * inten;
+        SDL_SetRenderDrawColor(render, r, g, b, 255);
+        SDL_RenderDrawPoint(render, i%width, i/width);
+    }*/
 
     SDL_RenderPresent(render);
     while (!quit) {
@@ -263,5 +314,6 @@ int main() {
     SDL_DestroyWindow(window);
     SDL_Quit();
     
+    delete [] zbuffer;
     return 0;
 }
