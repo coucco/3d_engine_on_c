@@ -38,7 +38,7 @@ const int width = 800;
 const int height = 800;
 const int depth = 255;
 
-void draw_line(SDL_Renderer* render, int x1, int y1, int x2, int y2) {
+void draw_line(SDL_Renderer* render, int x1, int y1, int x2, int y2) {      // отрисовка отрезка алгоритмом брезенхема
     SDL_SetRenderDrawColor(render, 255, 255, 255, 255);
     bool steep = false;
     if (abs(x1 - x2) < abs(y1 - y2)) {
@@ -73,7 +73,7 @@ void draw_line(SDL_Renderer* render, int x1, int y1, int x2, int y2) {
     }
 }
 
-Vec4f plane_equation_solve(Vec3i p1, Vec3i p2, Vec3i p3){
+Vec4f plane_equation_solve(Vec3i p1, Vec3i p2, Vec3i p3){     // вычисление координат плоскости заданной тремя точками
     long double A = (p2.y - p1.y) * (p3.z - p1.z) - (p2.z - p1.z) * (p3.y - p1.y);
     long double B = -((p2.x - p1.x) * (p3.z - p1.z) - (p2.z - p1.z) * (p3.x - p1.x));
     long double C = (p2.x - p1.x) * (p3.y - p1.y) - (p2.y - p1.y) * (p3.x - p1.x);
@@ -82,7 +82,7 @@ Vec4f plane_equation_solve(Vec3i p1, Vec3i p2, Vec3i p3){
     return ans;
 }
 
-void triangle(SDL_Renderer* render, Vec3i a, Vec3i b, Vec3i c, Color color, long double *zbuffer) {
+void triangle(SDL_Renderer* render, Vec3i a, Vec3i b, Vec3i c, Color color, vector<long double> &zbuffer) {        // функция отрисовки треугольника
     
     SDL_SetRenderDrawColor(render, color.r, color.g, color.b, 255);
 
@@ -94,7 +94,7 @@ void triangle(SDL_Renderer* render, Vec3i a, Vec3i b, Vec3i c, Color color, long
 
     Vec4f koef_plane = plane_equation_solve(a, b, c);
 
-    for(int y = a.y; y <= b.y; ++y) {
+    for(int y = a.y; y <= b.y; ++y) {           // отрисовка первой части треугольника
         if(a.x != b.x){
             long double k = (long double)(a.y - b.y) / (a.x - b.x);
             long double b1 = (long double)a.y - a.x * k;
@@ -129,7 +129,7 @@ void triangle(SDL_Renderer* render, Vec3i a, Vec3i b, Vec3i c, Color color, long
         }
     }
     
-    for(int y = b.y; y <= c.y; ++y) {
+    for(int y = b.y; y <= c.y; ++y) {           // отрисовка второй части треугольника
         if(b.x != c.x){
             long double k = (long double)(b.y - c.y) / (b.x - c.x);
             long double b1 = (long double)b.y - b.x * k;
@@ -156,7 +156,7 @@ void triangle(SDL_Renderer* render, Vec3i a, Vec3i b, Vec3i c, Color color, long
         for(int x = x1; x <= x2; ++x){
             if(x <= width && y <= height && x >=0 && y >= 0){
                 long double z = (-koef_plane.a*x - koef_plane.b*y - koef_plane.d) / (long double)koef_plane.c;
-                if(zbuffer[x + y * width] < z){
+                if(zbuffer[x + y * width] < z){     // если z-координата меньше только тогда отрисовываем треугольник, обновляем zbuffer
                     zbuffer[x + y * width] = z;
                     SDL_RenderDrawPoint(render, x, y);
                 }
@@ -172,12 +172,12 @@ int main() {
     bool quit = false;
     
     SDL_Init(SDL_INIT_EVERYTHING);
-    window = SDL_CreateWindow("engine 0.1", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, 0);
+    window = SDL_CreateWindow("engine 0.1", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, 0);    // инициализируем начальные значения для открытия окна
     render = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     SDL_SetRenderDrawColor(render, 255, 255, 255, 255);
     
     
-    auto f = freopen("/home/coucco/3d_engine_on_c/src/obj/african_head.obj", "r", stdin);
+    auto f = freopen("/home/coucco/3d_engine_on_c/src/obj/african_head.obj", "r", stdin);   // открываем файл модельки
     
     string s, t;
     vector<Vertex> vertices;
@@ -200,45 +200,20 @@ int main() {
         }
     }
 
-    long double *zbuffer = new long double[width*height + width];
+    vector<long double> zbuffer;
     for(int i = 0; i < width*height; ++i){
-        zbuffer[i] = -INT_MAX / 100.;
+        zbuffer.push_back(-INT_MAX / 100.);       // инициализация zbuffer значениями -inf 
     }
-
-    /*for (auto k : vertices) {
-        cout << k.a << " " << k.b << " " << k.c << endl;    // проверка парсера
-    }
-    cout << "---------" << endl;
-    cout << "triangles" << endl; 
-    cout << "---------" << endl;
-    for (auto k : triangles) {
-        cout << k.x << " " << k.y << " " << k.z << endl;
-    }*/
-
-    /*int x0, y0, x1, y1;
-    for (int i = 0; i < size(triangles); ++i) {
-        x0 = (vertices[triangles[i].x].x + 1.) * width/2.;
-        y0 = height - (vertices[triangles[i].x].y + 1.) * height/2.;
-        x1 = (vertices[triangles[i].y].x + 1.) * width/2.;
-        y1 = height - (vertices[triangles[i].y].y + 1.) * height/2.;
-        draw_line(render, x0, y0, x1, y1);
-        x1 = (vertices[triangles[i].z].x + 1.) * width/2.;         // отрисовка проволочной сетки
-        y1 = height - (vertices[triangles[i].z].y + 1.) * height/2.;
-        draw_line(render, x0, y0, x1, y1);
-        x0 = (vertices[triangles[i].y].x + 1.) * width/2.;
-        y0 = height - (vertices[triangles[i].y].y + 1.) * height/2.;
-        draw_line(render, x0, y0, x1, y1);
-    }*/
 
     int x0, y0, z0, x1, y1, z1, x2, y2, z2;
-    for (int i = 0; i < size(triangles); ++i) {
+    for (int i = 0; i < size(triangles); ++i) {      // перебираем треугольники модельки в цикле
 
         x0 = (vertices[triangles[i].x].x + 1.) * width/2.;
         y0 = height - (vertices[triangles[i].x].y + 1.) * height/2.;
         z0 = (vertices[triangles[i].x].z + 1.) * depth/2.;
 
         x1 = (vertices[triangles[i].y].x + 1.) * width/2.;
-        y1 = height - (vertices[triangles[i].y].y + 1.) * height/2.;
+        y1 = height - (vertices[triangles[i].y].y + 1.) * height/2.;      // вычисляем координаты
         z1 = (vertices[triangles[i].y].z + 1.) * depth/2.;
 
         x2 = (vertices[triangles[i].z].x + 1.) * width/2.;
@@ -269,7 +244,7 @@ int main() {
         long double z1_delta = z1_world - z0_world;
 
         long double nx = y0_delta * z1_delta - y1_delta * z0_delta;
-        long double ny = z0_delta * x1_delta - x0_delta * z1_delta;
+        long double ny = z0_delta * x1_delta - x0_delta * z1_delta;   // считаем нормали
         long double nz = x0_delta * y1_delta - x1_delta * y0_delta;
 
         long double norm = sqrt(nx * nx + ny * ny + nz * nz);
@@ -279,41 +254,30 @@ int main() {
         nz /= norm;
 
         long double l1 = 0.;
-        long double l2 = 0.;
+        long double l2 = 0.;            // задаем источники освещения
         long double l3 = -1.;
 
         long double intensity = l1 * nx + l2 * ny + l3 * nz;
         if(intensity > 0) {
             Uint8 r = intensity * 255 * 0.7, g = intensity * 255 * 0.7, b = intensity * 255 * 0.7;
             Color color = {r, g, b};
-            triangle(render, v1, v2, v3, color, zbuffer);
+            triangle(render, v1, v2, v3, color, zbuffer);       // передаем все что посчитали в функцию отрисовки треугольников
         }
     }
-
-    /*for(int i = 0; i < width*height; ++i){
-        long double inten = zbuffer[i] / (long double)depth;  // zbuffer check
-        Uint8 r, g, b;
-        r = 255 * inten;
-        g = 255 * inten;
-        b = 255 * inten;
-        SDL_SetRenderDrawColor(render, r, g, b, 255);
-        SDL_RenderDrawPoint(render, i%width, i/width);
-    }*/
 
     SDL_RenderPresent(render);
     while (!quit) {
         SDL_Event event;
         while (SDL_PollEvent(&event) != 0) {
-            if (event.type == SDL_QUIT) {
+            if (event.type == SDL_QUIT) {           // бесконечный цикл чтобы поддерживать окно открытым
                 quit = true;
                 break;
             }
         }
     }
     SDL_DestroyRenderer(render);
-    SDL_DestroyWindow(window);
+    SDL_DestroyWindow(window);          //  удаляем все объекты, заканчиваем работу программы
     SDL_Quit();
     
-    delete [] zbuffer;
     return 0;
 }
