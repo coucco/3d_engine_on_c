@@ -1,7 +1,9 @@
-#include <bits/stdc++.h>
+#include <iostream>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <climits>
 #include <SDL2/SDL.h>
-
-using namespace std;
 
 struct Vec3i{
     int x;
@@ -41,13 +43,13 @@ void draw_line(SDL_Renderer* render, int x1, int y1, int x2, int y2) {      // �
     SDL_SetRenderDrawColor(render, 255, 255, 255, 255);
     bool steep = false;
     if (abs(x1 - x2) < abs(y1 - y2)) {
-        swap(x1, y1);
-        swap(x2, y2);
+        std::swap(x1, y1);
+        std::swap(x2, y2);
         steep = true;
     }
     if (x1 > x2) {
-        swap(x1, x2);
-        swap(y1, y2);
+        std::swap(x1, x2);
+        std::swap(y1, y2);
     }
     int dx = x2 - x1;
     int dy = y2 - y1;
@@ -81,13 +83,13 @@ Vec4f plane_equation_solve(Vec3i p1, Vec3i p2, Vec3i p3){     // вычисле�
     return ans;
 }
 
-void triangle(SDL_Renderer* render, Vec3i a, Vec3i b, Vec3i c, Color color, vector<long double> &zbuffer) {        // функция отрисовки треугольника
+void triangle(SDL_Renderer* render, Vec3i a, Vec3i b, Vec3i c, Color color, std::vector<long double> &zbuffer) {        // функция отрисовки треугольника
     
     SDL_SetRenderDrawColor(render, color.r, color.g, color.b, 255);
 
-    if (a.y > b.y) swap(a, b);
-    if (a.y > c.y) swap(a, c);
-    if (b.y > c.y) swap(b, c);
+    if (a.y > b.y) std::swap(a, b);
+    if (a.y > c.y) std::swap(a, c);
+    if (b.y > c.y) std::swap(b, c);
     
     int x1, x2;
 
@@ -115,7 +117,7 @@ void triangle(SDL_Renderer* render, Vec3i a, Vec3i b, Vec3i c, Color color, vect
         }
 
         if(x2 < x1)
-            swap(x1, x2);
+            std::swap(x1, x2);
 
         for(int x = x1; x <= x2; ++x){
             if(x <= width && y <= height && x >=0 && y >= 0){
@@ -150,7 +152,7 @@ void triangle(SDL_Renderer* render, Vec3i a, Vec3i b, Vec3i c, Color color, vect
         }
 
         if(x2 < x1)
-            swap(x1, x2);
+            std::swap(x1, x2);
 
         for(int x = x1; x <= x2; ++x){
             if(x <= width && y <= height && x >=0 && y >= 0){
@@ -178,19 +180,19 @@ int main() {
     
     auto f = freopen("/home/coucco/3d_engine_on_c/src/obj/african_head.obj", "r", stdin);   // открываем файл модельки
     
-    string s, t;
-    vector<Vertex> vertices;
-    vector<Vec3i> triangles;
+    std::string s, t;
+    std::vector<Vertex> vertices;
+    std::vector<Vec3i> triangles;
     long double a, b, c;
     int i1, i2, i3;
-    while(cin>>s){
+    while(std::cin>>s){
         if(s == "v") {
-            cin >> a >> b >> c;
+            std::cin >> a >> b >> c;
             Vertex vert = {a, b, c};
             vertices.push_back(vert);
         }
         if(s == "f") {
-            cin >> i1 >> t >> i2 >> t >> i3 >> t;       // парсер граней и вершин модельки
+            std::cin >> i1 >> t >> i2 >> t >> i3 >> t;       // парсер граней и вершин модельки
             --i1;
             --i2;
             --i3;
@@ -199,7 +201,7 @@ int main() {
         }
     }
 
-    vector<long double> zbuffer;
+    std::vector<long double> zbuffer;
     for(int i = 0; i < width*height; ++i){
         zbuffer.push_back(-INT_MAX / 100.);       // инициализация zbuffer значениями -inf 
     }
