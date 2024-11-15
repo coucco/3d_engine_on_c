@@ -1,4 +1,3 @@
-// g++ -o main -O3 src/bin/main.cpp `sdl2-config --cflags --libs`
 #include <bits/stdc++.h>
 #include <SDL2/SDL.h>
 
