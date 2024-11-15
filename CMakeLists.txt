@@ -11,6 +11,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
 
 # Найти пакет SDL2
+
+set(SDL2_DIR "${CMAKE_SOURCE_DIR}/src/lib/SDL")
 find_package(SDL2 REQUIRED)
 
 # Включить директории SDL2

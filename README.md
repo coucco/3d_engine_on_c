@@ -44,10 +44,10 @@
             cmake ..
             ```
             ```bash
-            cmake --build .
+            make
             ```
             Если CMake не установлен, терминал предложит его установить,
-            установив CMake повторите команду.
+            установив CMake повторите 2 последние команды из папки build.
     
 3. Запустите собранный бинарный файл:
     ```bash
@@ -58,7 +58,7 @@
 
 Результатом является получение отрисованной модельки в созданном окне:
 
-![alt text](https://https://github.com/coucco/3d_engine_on_c/render_result_ex1.jpg)
+![ex.1](https://https://github.com/coucco/images/3d_engine_on_c/render_result_ex1.jpg)
 
 ## Планы на будущее
 
