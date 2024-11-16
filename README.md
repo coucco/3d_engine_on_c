@@ -58,7 +58,7 @@
 
 Результатом является получение отрисованной модельки в созданном окне:
 
-![ex.1](https://github.com/coucco/images/3d_engine_on_c/render_result_ex1.jpg)
+![ex.1](images/render_result_ex1.jpg)
 
 ## Планы на будущее
 
