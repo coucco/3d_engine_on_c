@@ -32,7 +32,7 @@
 
     1. Ручками в терминале:
         1.  ```bash
-            g++ -o main -O3 src/bin/main.cpp `sdl2-config --cflags --libs`
+            g++ -o main -O3 src/bin/math.cpp src/bin/model.cpp src/bin/main.cpp `sdl2-config --cflags --libs`
             ```
         2.  Если g++ не установлен, терминал предложит его установить,
             установив g++ повторите команду.
