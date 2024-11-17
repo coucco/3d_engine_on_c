@@ -10,7 +10,7 @@
 
 1. Клонируйте репозиторий:
       ```bash
-      git clone https://github.com/coucco/3d_engine_on_c.git
+      git clone https://github.com/coucco/3d_engine_on_c
       ```
      Если git не установлен, терминал предложит его установить,
      установив git повторите команду.
