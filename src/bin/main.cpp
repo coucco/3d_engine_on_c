@@ -4,40 +4,10 @@
 #include <string>
 #include <climits>
 #include <SDL2/SDL.h>
-
-struct Vec3i{
-    int x;
-    int y;
-    int z;
-};
-
-struct Vec2i{
-    int x;
-    int y;
-};
-
-struct Vec4f{
-    long double a;
-    long double b;
-    long double c;
-    long double d;
-};
-
-struct Vertex{
-    long double x;
-    long double y;
-    long double z;
-};
-
-struct Color{
-    Uint8 r;
-    Uint8 g;
-    Uint8 b;
-};
-
-const int width = 800;
-const int height = 800;
-const int depth = 255;
+#include "constants.h"
+#include "custom_structs.h"
+#include "math.h"
+#include "model.h"
 
 void draw_line(SDL_Renderer* render, int x1, int y1, int x2, int y2) {      // отрисовка отрезка алгоритмом брезенхема
     SDL_SetRenderDrawColor(render, 255, 255, 255, 255);
@@ -72,15 +42,6 @@ void draw_line(SDL_Renderer* render, int x1, int y1, int x2, int y2) {      // �
             error -= dx*2;
         }
     }
-}
-
-Vec4f plane_equation_solve(Vec3i p1, Vec3i p2, Vec3i p3){     // вычисление координат плоскости заданной тремя точками
-    long double A = (p2.y - p1.y) * (p3.z - p1.z) - (p2.z - p1.z) * (p3.y - p1.y);
-    long double B = -((p2.x - p1.x) * (p3.z - p1.z) - (p2.z - p1.z) * (p3.x - p1.x));
-    long double C = (p2.x - p1.x) * (p3.y - p1.y) - (p2.y - p1.y) * (p3.x - p1.x);
-    long double D = -(A * p1.x + B * p1.y + C * p1.z);
-    Vec4f ans = {A, B, C, D};
-    return ans;
 }
 
 void triangle(SDL_Renderer* render, Vec3i a, Vec3i b, Vec3i c, Color color, std::vector<long double> &zbuffer) {        // функция отрисовки треугольника
@@ -178,7 +139,7 @@ int main() {
     SDL_SetRenderDrawColor(render, 255, 255, 255, 255);
     
     
-    auto f = freopen("/home/coucco/3d_engine_on_c/src/obj/african_head.obj", "r", stdin);   // открываем файл модельки
+    auto f = freopen("../src/obj/african_head.obj", "r", stdin);   // открываем файл модельки
     
     std::string s, t;
     std::vector<Vertex> vertices;
@@ -276,6 +237,7 @@ int main() {
             }
         }
     }
+
     SDL_DestroyRenderer(render);
     SDL_DestroyWindow(window);          //  удаляем все объекты, заканчиваем работу программы
     SDL_Quit();

@@ -53,3 +53,4 @@ dkms.conf
 
 # Ignoring the result of CMake - build directory
 /build/
+/lib/SDL/
