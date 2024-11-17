@@ -3,46 +3,13 @@
 #include <vector>
 #include <string>
 #include <climits>
+#include <cstdio>
 #include <SDL2/SDL.h>
 #include "constants.h"
 #include "custom_structs.h"
 #include "math.h"
 #include "model.h"
-
-void draw_line(SDL_Renderer* render, int x1, int y1, int x2, int y2) {      // отрисовка отрезка алгоритмом брезенхема
-    SDL_SetRenderDrawColor(render, 255, 255, 255, 255);
-    bool steep = false;
-    if (abs(x1 - x2) < abs(y1 - y2)) {
-        std::swap(x1, y1);
-        std::swap(x2, y2);
-        steep = true;
-    }
-    if (x1 > x2) {
-        std::swap(x1, x2);
-        std::swap(y1, y2);
-    }
-    int dx = x2 - x1;
-    int dy = y2 - y1;
-    int derror = abs(dy)*2;
-    int error = 0;
-    int y = y1;
-    for (int x = x1; x <= x2; ++x) {
-        if (steep) {
-            SDL_RenderDrawPoint(render, y, x);
-        } else {
-            SDL_RenderDrawPoint(render, x, y);
-        }
-        error += derror;
-        if (error > dx) {
-            if(y2 > y1) {
-                y += 1;
-            } else {
-                y += -1;
-            }
-            error -= dx*2;
-        }
-    }
-}
+#include "render.h"
 
 void triangle(SDL_Renderer* render, Vec3i a, Vec3i b, Vec3i c, Color color, std::vector<long double> &zbuffer) {        // функция отрисовки треугольника
     
@@ -138,30 +105,16 @@ int main() {
     render = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     SDL_SetRenderDrawColor(render, 255, 255, 255, 255);
     
-    
-    auto f = freopen("../src/obj/african_head.obj", "r", stdin);   // открываем файл модельки
-    
-    std::string s, t;
-    std::vector<Vertex> vertices;
-    std::vector<Vec3i> triangles;
-    long double a, b, c;
-    int i1, i2, i3;
-    while(std::cin>>s){
-        if(s == "v") {
-            std::cin >> a >> b >> c;
-            Vertex vert = {a, b, c};
-            vertices.push_back(vert);
-        }
-        if(s == "f") {
-            std::cin >> i1 >> t >> i2 >> t >> i3 >> t;       // парсер граней и вершин модельки
-            --i1;
-            --i2;
-            --i3;
-            Vec3i triangle = {i1, i2, i3};
-            triangles.push_back(triangle);
-        }
-    }
+    Render main_render(render);
 
+    Model african_head("../src/obj/african_head.obj", main_render);
+
+    african_head.provolka();
+
+    /*african_head.zbuffer();
+    african_head.render();*/
+
+    /*
     std::vector<long double> zbuffer;
     for(int i = 0; i < width*height; ++i){
         zbuffer.push_back(-INT_MAX / 100.);       // инициализация zbuffer значениями -inf 
@@ -226,6 +179,7 @@ int main() {
             triangle(render, v1, v2, v3, color, zbuffer);       // передаем все что посчитали в функцию отрисовки треугольников
         }
     }
+    */
 
     SDL_RenderPresent(render);
     while (!quit) {

@@ -17,7 +17,7 @@ add_subdirectory(src/lib/SDL)
 include_directories(src/lib/SDL/include src/bin/include)
 
 # Добавить исполняемый файл
-add_executable(main src/bin/math.cpp src/bin/model.cpp src/bin/main.cpp)
+add_executable(main src/bin/math.cpp src/bin/model.cpp src/bin/render.cpp src/bin/main.cpp)
 
 # Линковка с библиотеками SDL2
 target_link_libraries(main SDL2)

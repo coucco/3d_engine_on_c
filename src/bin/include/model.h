@@ -1,5 +1,22 @@
 #pragma once
 
+#include <SDL2/SDL.h>
+#include <iostream>
+#include <vector>
+#include <cstdio>
+#include "custom_structs.h"
+#include "constants.h"
+#include "render.h"
+
 class Model{
-    Model();
+    public:
+
+    FILE* model_file;
+    Render render;
+    std::vector<Vertex> vertices;
+    std::vector<Vec3i> triangles;
+
+    Model(const char* model_path, Render render_main);
+
+    void provolka();
 };
