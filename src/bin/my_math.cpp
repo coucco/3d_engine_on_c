@@ -1,4 +1,4 @@
-#include "math.h"
+#include "my_math.h"
 #include "custom_structs.h"
 
 Vec4f plane_equation_solve(Vec3i p1, Vec3i p2, Vec3i p3){     // вычисление координат плоскости заданной тремя точками

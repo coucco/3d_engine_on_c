@@ -2,7 +2,7 @@
 #include "../lib/SDL/include/SDL.h"
 #include "constants.h"
 #include "custom_structs.h"
-#include "math.h"
+#include "my_math.h"
 #include "model.h"
 #include "render.h"
 
