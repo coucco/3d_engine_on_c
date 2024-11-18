@@ -2,11 +2,11 @@
 
 #include <iostream>
 #include <vector>
-#include <cstdio>
 #include "../../lib/SDL/include/SDL.h"
 #include "custom_structs.h"
 #include "constants.h"
 #include "render.h"
+#include <cstdio>
 
 class Model{
     public:

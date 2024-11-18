@@ -1,8 +1,4 @@
 #include <iostream>
-#include <vector>
-#include <string>
-#include <climits>
-#include <cstdio>
 #include "../lib/SDL/include/SDL.h"
 #include "constants.h"
 #include "custom_structs.h"

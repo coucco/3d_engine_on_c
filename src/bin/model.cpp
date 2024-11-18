@@ -3,11 +3,11 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include <cstdio>
 #include "../lib/SDL/include/SDL.h"
 #include "custom_structs.h"
 #include "constants.h"
 #include "render.h"
+#include <cstdio>
 
 Model::Model(const char* model_path, Render render_main){
 
