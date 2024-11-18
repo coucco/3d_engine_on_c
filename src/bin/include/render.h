@@ -2,8 +2,11 @@
 
 #include <vector>
 #include <utility>
+#include <cmath>
 #include "../../lib/SDL/include/SDL.h"
 #include "custom_structs.h"
+#include "constants.h"
+#include "my_math.h"
 
 class Render{
     public:
