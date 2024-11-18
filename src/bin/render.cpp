@@ -1,7 +1,9 @@
 #include "render.h"
 
+#include <vector>
 #include <utility>
-#include <SDL2/SDL.h>
+#include "../lib/SDL/include/SDL.h"
+#include "custom_structs.h"
 
 Render::Render(SDL_Renderer* render){
     this->render = render;

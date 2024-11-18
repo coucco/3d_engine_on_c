@@ -1,10 +1,10 @@
 #include "model.h"
 
-#include <SDL2/SDL.h>
 #include <iostream>
 #include <vector>
 #include <string>
 #include <cstdio>
+#include "../lib/SDL/include/SDL.h"
 #include "custom_structs.h"
 #include "constants.h"
 #include "render.h"
