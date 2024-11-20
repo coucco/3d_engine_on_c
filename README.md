@@ -41,7 +41,7 @@
         $ cmake ..
         ```
         ```bash
-        $make
+        $ make
         ```
         Если CMake не установлен, терминал предложит его установить,
         установив CMake повторите 2 последние команды из папки build.
@@ -50,22 +50,22 @@
 
 1. Запустите собранный бинарный файл с нужными флагами:
     ```bash
-    ./main provolka
+    $ ./main provolka
     ```
     ![provolka](images/provolka.jpg)
 
     ```bash
-    ./main zbuffer_check
+    $ ./main zbuffer_check
     ```
     ![zbuffer_check](images/zbuffer_check.jpg)
 
     ```bash
-    ./main polygon
+    $ ./main polygon
     ```
     ![polygon](images/polygon.jpg)
 
     ```bash
-    ./main polygon_smooth
+    $ ./main polygon_smooth
     ```
     ![polygon_smooth](images/polygon_smooth.jpg)
 
