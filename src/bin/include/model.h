@@ -17,7 +17,11 @@ class Model{
     FILE* model_file;
     Render render;
     std::vector<Vertex> vertices;
+    std::vector<Texture_2d_cord> texture_2d_cords;
+    std::vector<Norm_vector> vertex_normals;
     std::vector<Vec3i> triangles;
+    std::vector<Vec3i> texture_triangles;
+    std::vector<Vec3i> normal_triangles;
     std::vector<long double> zbuffer;
 
     Model(const char* model_path, Render render_main);
@@ -27,4 +31,6 @@ class Model{
     void polygon();
 
     void zbuffer_check();
+
+    void polygon_smooth();
 };

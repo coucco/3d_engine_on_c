@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cstring>
 #include "../lib/SDL/include/SDL.h"
 #include "constants.h"
 #include "custom_structs.h"
@@ -21,11 +22,22 @@ int main(int argc, char* argv[]){
 
     Model african_head("../src/obj/african_head.obj", main_render);
 
-    //african_head.provolka();
+    if(strcmp(argv[1], "provolka") == 0){
+        african_head.provolka();
+    }
 
-    african_head.polygon();
+    if(strcmp(argv[1], "polygon") == 0){
+        african_head.polygon();
+    }
 
-    //african_head.zbuffer_check();
+    if(strcmp(argv[1], "zbuffer_check") == 0){
+        african_head.polygon();
+        african_head.zbuffer_check();
+    }
+
+    if(strcmp(argv[1], "polygon_smooth") == 0){
+        african_head.polygon_smooth();
+    }
 
     SDL_RenderPresent(render);
     while (!quit) {

@@ -3,7 +3,7 @@
 Простой 3d рендер на C++ с нуля like OpenGL для работы с графикой
 
 - [Сборка](#сборка)
-- [Результат](#результат)
+- [Использование](#использование)
 - [Лицензия](#лицензия)
 
 ## Сборка
@@ -54,17 +54,29 @@
             ```
             Если CMake не установлен, терминал предложит его установить,
             установив CMake повторите 2 последние команды из папки build.
-    
-4. Запустите собранный бинарный файл:
+
+## Использование
+
+1. Запустите собранный бинарный файл с нужными флагами:
     ```bash
-    ./main
+    ./main provolka
     ```
+    ![provolka](images/provolka.jpg)
 
-## Результат
+    ```bash
+    ./main zbuffer_check
+    ```
+    ![zbuffer_check](images/zbuffer_check.jpg)
 
-Результатом является получение отрисованной модельки в созданном окне:
+    ```bash
+    ./main polygon
+    ```
+    ![polygon](images/polygon.jpg)
 
-![ex.1](images/render_result_ex1.jpg)
+    ```bash
+    ./main polygon_smooth
+    ```
+    ![polygon_smooth](images/polygon_smooth.jpg)
 
 ## Планы на будущее
 
