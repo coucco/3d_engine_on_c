@@ -54,6 +54,10 @@ void Render::draw_line(int x1, int y1, int x2, int y2) {      // отрисов�
 
 void Render::triangle(Vec3i a, Vec3i b, Vec3i c, Color color, std::vector<long double> &zbuffer) {        // функция отрисовки треугольника
 
+    if (a.y == b.y && a.y == c.y){
+        return;
+    }
+
     SDL_SetRenderDrawColor(this->render, color.r, color.g, color.b, 255);
 
     if (a.y > b.y) std::swap(a, b);
@@ -137,6 +141,10 @@ void Render::triangle(Vec3i a, Vec3i b, Vec3i c, Color color, std::vector<long d
 
 void Render::triangle_smooth(Vec3i a, Vec3i b, Vec3i c, std::vector<long double> &zbuffer, Vec3f light, Vertex3_normals vertex_normals){
 
+    if (a.y == b.y && a.y == c.y){
+        return;
+    }
+
     if (a.y > b.y){
         std::swap(a, b);
         std::swap(vertex_normals.a, vertex_normals.b);
@@ -184,10 +192,10 @@ void Render::triangle_smooth(Vec3i a, Vec3i b, Vec3i c, std::vector<long double>
                 long double z = (-koef_plane.a*x - koef_plane.b*y - koef_plane.d) / (long double)koef_plane.c;
                 if(zbuffer[x + y * width] < z){
                     zbuffer[x + y * width] = z;
-                    Vec3i point = {x, y, z};
+                    Vec3i point = {x, y, static_cast<int>(z)};
                     Vec3f koefs = baricentric_koefs(a, b, c, point);
                     nx = koefs.a * vertex_normals.a.x + koefs.b * vertex_normals.b.x + koefs.c * vertex_normals.c.x;
-                    ny = koefs.a * vertex_normals.a.y + koefs.b * vertex_normals.b.y + koefs.c * vertex_normals.c.y;
+                    ny = koefs.a * vertex_normals.a.y + koefs.b * vertex_normals.b.y + koefs.c * vertex_normals.c.y;   // интерполируем нормаль внутри треугольника
                     nz = koefs.a * vertex_normals.a.z + koefs.b * vertex_normals.b.z + koefs.c * vertex_normals.c.z;
                     length = sqrt(nx * nx + ny * ny + nz * nz);
                     nx /= length;
@@ -234,10 +242,10 @@ void Render::triangle_smooth(Vec3i a, Vec3i b, Vec3i c, std::vector<long double>
                 long double z = (-koef_plane.a*x - koef_plane.b*y - koef_plane.d) / (long double)koef_plane.c;
                 if(zbuffer[x + y * width] < z){     // если z-координата меньше только тогда отрисовываем треугольник, обновляем zbuffer
                     zbuffer[x + y * width] = z;
-                    Vec3i point = {x, y, z};
+                    Vec3i point = {x, y, static_cast<int>(z)};
                     Vec3f koefs = baricentric_koefs(a, b, c, point);
                     nx = koefs.a * vertex_normals.a.x + koefs.b * vertex_normals.b.x + koefs.c * vertex_normals.c.x;
-                    ny = koefs.a * vertex_normals.a.y + koefs.b * vertex_normals.b.y + koefs.c * vertex_normals.c.y;
+                    ny = koefs.a * vertex_normals.a.y + koefs.b * vertex_normals.b.y + koefs.c * vertex_normals.c.y;    // интерполируем нормаль внутри треугольника
                     nz = koefs.a * vertex_normals.a.z + koefs.b * vertex_normals.b.z + koefs.c * vertex_normals.c.z;
                     length = sqrt(nx * nx + ny * ny + nz * nz);
                     nx /= length;

@@ -181,8 +181,8 @@ void Model::polygon_smooth(){
         Vec3i v1 = {x0, y0, z0}, v2 = {x1, y1, z1}, v3 = {x2, y2, z2};
 
         long double l1 = 0.15;
-        long double l2 = 0.1;            // задаем источники освещения
-        long double l3 = 0.75;
+        long double l2 = 0.2;            // задаем источники освещения
+        long double l3 = 0.65;
 
         Vec3f light = {l1, l2, l3};
 
