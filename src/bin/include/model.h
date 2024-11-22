@@ -23,6 +23,12 @@ class Model{
     std::vector<Vec3i> texture_triangles;
     std::vector<Vec3i> normal_triangles;
     std::vector<long double> zbuffer;
+    int min_vx = INT_MAX;
+    int min_vy = INT_MAX;
+    int min_vz = INT_MAX;
+    int max_vx = INT_MIN;
+    int max_vy = INT_MIN;
+    int max_vz = INT_MIN;
 
     Model(const char* model_path, Render render_main);
 

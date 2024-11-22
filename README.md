@@ -48,26 +48,51 @@
 
 ## Использование
 
-1. Запустите собранный бинарный файл с нужными флагами:
+1. Запустите собранный бинарный файл с нужными аргументами:
+    
+    1. Шаблон:
     ```bash
-    $ ./main provolka
+    $ ./main <имя_модельки> <метод_рендеринга>
     ```
-    ![provolka](images/provolka.jpg)
+
+    2. <имя_модельки> - имя модели без расширения в папке src/obj/
+    сейчас доступны: african_head, author_head.
+
+    3. <метод_рендеринга> - метод по которому отрисуется выбранная моделька
+    сейчас доступны: polygon_smooth, polygon, provolka, zbuffer_check.
+
+    4. Примеры:
 
     ```bash
-    $ ./main zbuffer_check
+    $ ./main african_head provolka
     ```
-    ![zbuffer_check](images/zbuffer_check.jpg)
+    ![african_head_provolka](images/african_head_provolka.jpg)
 
     ```bash
-    $ ./main polygon
+    $ ./main african_head zbuffer_check
     ```
-    ![polygon](images/polygon.jpg)
+    ![african_head_zbuffer_check](images/african_head_zbuffer_check.jpg)
 
     ```bash
-    $ ./main polygon_smooth
+    $ ./main african_head polygon
     ```
-    ![polygon_smooth](images/polygon_smooth.jpg)
+    ![african_head_polygon](images/african_head_polygon.jpg)
+
+    ```bash
+    $ ./main african_head polygon_smooth
+    ```
+    ![african_head_polygon_smooth](images/african_head_polygon_smooth.jpg)
+
+    ```bash
+    $ ./main author_head polygon
+    ```
+    ![author_head_polygon](images/author_head_polygon.jpg)
+
+    ```bash
+    $ ./main author_head polygon_smooth
+    ```
+    ![author_head_polygon_smooth](images/author_head_polygon_smooth.jpg)
+
 
 ## Планы на будущее
 

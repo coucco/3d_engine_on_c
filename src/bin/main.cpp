@@ -20,23 +20,27 @@ int main(int argc, char* argv[]){
     
     Render main_render(render);
 
-    Model african_head("../src/obj/african_head.obj", main_render);
+    std::string model_name = argv[1];
+    std::string model_path = "../src/obj/" + model_name + ".obj";
+    const char * const_char_model_path = model_path.c_str();
 
-    if(strcmp(argv[1], "provolka") == 0){
-        african_head.provolka();
+    Model model(const_char_model_path, main_render);
+
+    if(strcmp(argv[2], "provolka") == 0){
+        model.provolka();
     }
 
-    if(strcmp(argv[1], "polygon") == 0){
-        african_head.polygon();
+    if(strcmp(argv[2], "polygon") == 0){
+        model.polygon();
     }
 
-    if(strcmp(argv[1], "zbuffer_check") == 0){
-        african_head.polygon();
-        african_head.zbuffer_check();
+    if(strcmp(argv[2], "zbuffer_check") == 0){
+        model.polygon();
+        model.zbuffer_check();
     }
 
-    if(strcmp(argv[1], "polygon_smooth") == 0){
-        african_head.polygon_smooth();
+    if(strcmp(argv[2], "polygon_smooth") == 0){
+        model.polygon_smooth();
     }
 
     SDL_RenderPresent(render);

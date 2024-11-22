@@ -18,18 +18,36 @@ Model::Model(const char* model_path, Render render_main){
     this->model_file = freopen(model_path, "r", stdin); // путь по которому лежит моделька в формате .obj
     // путь может быть абсолютным либо относительно папки с проектом с указанием в начале префикса ../
 
-    std::string s;
+    std::string s, t;
     char c;
     long double x, y, z;
-    int v1, v2, v3, vt1, vt2, vt3, vn1, vn2, vn3;
+    int v1, v2, v3, vt1 = 0, vt2 = 0, vt3 = 0, vn1 = 0, vn2 = 0, vn3 = 0;
     while(std::cin>>s){
         if(s == "v") {
             std::cin >> x >> y >> z;
+            if(x < this->min_vx){
+                this->min_vx = x;
+            }
+            if(y < this->min_vy){
+                this->min_vy = y;
+            }
+            if(z < this->min_vz){
+                this->min_vz = z;
+            }
+            if(x > this->max_vx){
+                this->max_vx = x;
+            }
+            if(y > this->max_vy){
+                this->max_vy = y;
+            }
+            if(z > this->max_vz){
+                this->max_vz = z;
+            }
             Vertex vert = {x, y, z};
             this->vertices.push_back(vert);
         }
         if(s == "vt") {
-            std::cin >> x >> y >> z;
+            std::cin >> x >> y;
             Texture_2d_cord textcord = {x, y}; // z = 0.0
             this->texture_2d_cords.push_back(textcord);
         }
@@ -39,7 +57,59 @@ Model::Model(const char* model_path, Render render_main){
             this->vertex_normals.push_back(normal);
         }
         if(s == "f") {
-            std::cin >> v1 >> c >> vt1 >> c >> vn1 >> v2 >> c >> vt2 >> c >> vn2 >> v3 >> c >> vt3 >> c >> vn3;   // парсер граней и вершин модельки
+            int ind1 = -1, ind2 = -1;
+            std::cin >> t;                                       // парсер граней и вершин модельки
+            for(size_t i = 0; i < size(t); ++i){
+                if(t[i] == '/'){
+                    if(ind1 == -1)
+                        ind1 = i;
+                    else
+                        ind2 = i;
+                }
+            }
+            v1 = std::stoi((t.substr(0, ind1)));
+            if(ind1 + 1 != ind2)
+                vt1 = std::stoi((t.substr(ind1+1, ind2-ind1-1)));
+            else
+                vt1 = -1;
+            vn1 = std::stoi((t.substr(ind2+1, size(t)-ind2)));
+
+            ind1 = -1;
+            ind2 = -1;
+            std::cin >> t;
+            for(size_t i = 0; i < size(t); ++i){
+                if(t[i] == '/'){
+                    if(ind1 == -1)
+                        ind1 = i;
+                    else
+                        ind2 = i;
+                }
+            }
+            v2 = std::stoi((t.substr(0, ind1)));
+            if(ind1 + 1 != ind2)
+                vt2 = std::stoi((t.substr(ind1+1, ind2-ind1-1)));
+            else
+                vt2 = -1;
+            vn2 = std::stoi((t.substr(ind2+1, size(t)-ind2)));
+
+            ind1 = -1;
+            ind2 = -1;
+            std::cin >> t;
+            for(size_t i = 0; i < size(t); ++i){
+                if(t[i] == '/'){
+                    if(ind1 == -1)
+                        ind1 = i;
+                    else
+                        ind2 = i;
+                }
+            }
+            v3 = std::stoi((t.substr(0, ind1)));
+            if(ind1 + 1 != ind2)
+                vt2 = std::stoi((t.substr(ind1+1, ind2-ind1-1)));
+            else
+                vt2 = -1;
+            vn3 = std::stoi((t.substr(ind2+1, size(t)-ind2)));
+
             --v1;
             --v2;
             --v3;
@@ -58,14 +128,22 @@ Model::Model(const char* model_path, Render render_main){
         }
     }
 
-    for(int i = 0; i < width*height; ++i){
+    long double model_length = std::max(max_vx - min_vx, std::max(max_vy - min_vy, max_vz - min_vz));
+
+    for(size_t i = 0; i < size(this->vertices); ++i){
+        this->vertices[i].x = this->vertices[i].x / model_length * 2;
+        this->vertices[i].y = this->vertices[i].y / model_length * 2;
+        this->vertices[i].z = this->vertices[i].z / model_length * 2;
+    }
+
+    for(size_t i = 0; i < width*height; ++i){
         this->zbuffer.push_back(-INT_MAX / 100.);       // инициализация zbuffer значениями -inf 
     }
 }
 
 void Model::provolka(){
     int x0, y0, x1, y1;
-    for (int i = 0; i < std::size(this->triangles); ++i) {
+    for (size_t i = 0; i < std::size(this->triangles); ++i) {
         x0 = (this->vertices[this->triangles[i].x].x + 1.) * width/2.;
         y0 = height - (this->vertices[this->triangles[i].x].y + 1.) * height/2.;
         x1 = (this->vertices[this->triangles[i].y].x + 1.) * width/2.;
@@ -81,12 +159,12 @@ void Model::provolka(){
 }
 
 void Model::polygon(){
-    for(int i = 0; i < width*height; ++i){
+    for(size_t i = 0; i < width*height; ++i){
         this->zbuffer[i] = -INT_MAX / 100.;       // инициализация zbuffer значениями -inf 
     }
 
     int x0, y0, z0, x1, y1, z1, x2, y2, z2;
-    for (int i = 0; i < size(triangles); ++i) {      // перебираем треугольники модельки в цикле
+    for (size_t i = 0; i < size(triangles); ++i) {      // перебираем треугольники модельки в цикле
 
         x0 = (vertices[triangles[i].x].x + 1.) * width/2.;
         y0 = height - (vertices[triangles[i].x].y + 1.) * height/2.;
@@ -147,7 +225,7 @@ void Model::polygon(){
 }
 
 void Model::zbuffer_check(){
-    for(int i = 0; i < width*height; ++i){
+    for(size_t i = 0; i < width*height; ++i){
         long double intensity = zbuffer[i] / (long double)depth;  // zbuffer check
         Uint8 r, g, b;
         r = 255 * intensity;
@@ -159,12 +237,12 @@ void Model::zbuffer_check(){
 }
 
 void Model::polygon_smooth(){
-    for(int i = 0; i < width*height; ++i){
+    for(size_t i = 0; i < width*height; ++i){
         this->zbuffer[i] = -INT_MAX / 100.;       // инициализация zbuffer значениями -inf 
     }
 
     int x0, y0, z0, x1, y1, z1, x2, y2, z2;
-    for (int i = 0; i < size(triangles); ++i) {      // перебираем треугольники модельки в цикле
+    for (size_t i = 0; i < size(triangles); ++i) {      // перебираем треугольники модельки в цикле
 
         x0 = (vertices[triangles[i].x].x + 1.) * width/2.;
         y0 = height - (vertices[triangles[i].x].y + 1.) * height/2.;
