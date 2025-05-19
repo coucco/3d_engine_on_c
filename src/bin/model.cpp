@@ -268,4 +268,8 @@ void Model::polygon_smooth(){
 
         this->render.triangle_smooth(v1, v2, v3, zbuffer, light, vertices_normals);
     }
+
+    /*void Model::camera_movement(){
+        
+    }*/
 }

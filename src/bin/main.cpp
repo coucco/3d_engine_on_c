@@ -58,13 +58,6 @@ int main(int argc, char *argv[]) {
   SDL_DestroyRenderer(render);
   SDL_DestroyWindow(window); //  удаляем все объекты, заканчиваем работу программы
   SDL_Quit();
-  
-
- // Matrix Model = Matrix::identity(4);
-
- // Matrix v = Matrix();
-
- // Viewport * Projection * View * Model * v;
 
   return 0;
 }
