@@ -34,4 +34,6 @@ class Matrix{
         };
 
         Row operator[](size_t row);
+
+        Matrix& sanitize();
 };

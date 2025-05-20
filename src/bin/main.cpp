@@ -3,6 +3,7 @@
 #include "custom_structs.h"
 #include "matrix.h"
 #include "model.h"
+#include "move.h"
 #include "my_math.h"
 #include "render.h"
 #include <cstring>
@@ -10,7 +11,15 @@
 
 int main(int argc, char *argv[]) {
 
-  SDL_Window *window = NULL;
+Vec3f eye(0, 0, 5);
+Vec3f center(0, 0, 0);
+Vec3f up(0, 1, 0);
+
+Matrix ModelView = lookat(eye, center, up);
+
+std::cout<<ModelView;
+
+  /*SDL_Window *window = NULL;
   SDL_Renderer *render = NULL;
 
   SDL_Init(SDL_INIT_EVERYTHING);
@@ -57,7 +66,17 @@ int main(int argc, char *argv[]) {
 
   SDL_DestroyRenderer(render);
   SDL_DestroyWindow(window); //  удаляем все объекты, заканчиваем работу программы
-  SDL_Quit();
+  SDL_Quit();*/
 
   return 0;
 }
+
+
+/*
+
+camera movement will be called by the function
+
+./main camera_move eye center up
+
+
+*/

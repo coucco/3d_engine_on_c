@@ -27,7 +27,7 @@ Matrix::Matrix(Vec3f v){
 
 Matrix Matrix::identity(size_t n){
     Matrix m(n, n);
-    for(size_t i = 1; i <= n; ++i){
+    for(size_t i = 0; i < n; ++i){
         m[i][i] = 1;
     }
     return m;
@@ -67,4 +67,15 @@ Matrix Matrix::operator*(const Matrix &other) const{
         }
     }
     return result;
+}
+
+Matrix& Matrix::sanitize(){
+        for (size_t i = 0; i < m; ++i) {
+            for (size_t j = 0; j < n; ++j) {
+                if (std::isnan(a[i][j])) {
+                    a[i][j] = (i == j) ? 1.0L : 0.0L;
+                }
+            }
+        }
+        return *this;
 }

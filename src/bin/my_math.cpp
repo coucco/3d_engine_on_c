@@ -2,6 +2,7 @@
 
 #include "custom_structs.h"
 #include "matrix.h"
+#include <iostream>
 
 Vec4f plane_equation_solve(Vec3i p1, Vec3i p2, Vec3i p3){     // вычисление координат плоскости заданной тремя точками
     long double A = (p2.y - p1.y) * (p3.z - p1.z) - (p2.z - p1.z) * (p3.y - p1.y);
@@ -21,10 +22,10 @@ Vec3f baricentric_koefs(Vec3i a, Vec3i b, Vec3i c, Vec3i point){
     return ans;
 }
 
-/*Vec2i to_screen_cords(Vec3f v, Vec3f camera_cords, Vec3f camera_view){
-    Matrix Model = Matrix::identity(4); // Матрица перехода от координат модели к мировым координатам
-
-    Matrix v = Matrix(v);
-
-    Viewport * Projection * View * Model * v;
-}*/
+Vec3f cross(Vec3f a, Vec3f b){
+    return Vec3f{
+        a.b * b.c - a.c * b.b,  // a
+        a.c * b.a - a.a * b.c,   // b
+        a.a * b.b - a.b * b.a    // c
+    };
+}
