@@ -8,6 +8,8 @@ struct Vec3i{
     int x;
     int y;
     int z;
+
+    Vec3i(int x_, int y_, int z_) : x(x_), y(y_), z(z_) {}
 };
 
 struct Vec2i{

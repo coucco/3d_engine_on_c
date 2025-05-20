@@ -7,6 +7,7 @@
 #include "custom_structs.h"
 #include "constants.h"
 #include "render.h"
+#include "move.h"
 #include <cstdio>
 #include <climits>
 #include <cmath>
@@ -268,8 +269,35 @@ void Model::polygon_smooth(){
 
         this->render.triangle_smooth(v1, v2, v3, zbuffer, light, vertices_normals);
     }
+}
 
-    /*void Model::camera_movement(){
+void Model::camera_movement_provolka(Vec3f eye, Vec3f center, Vec3f up){
+    int x0, y0, x1, y1;
+    for(size_t i = 0; i < std::size(this->triangles); ++i) {
+        Matrix v_m(4, 1);
+        v_m[0][0] = vertices[this->triangles[i].x].x;
+        v_m[1][0] = vertices[this->triangles[i].x].y;
+        v_m[2][0] = vertices[this->triangles[i].x].z;
+        v_m[3][0] = 1;
+        Matrix screen_cords = viewport(0, 0) * lookat(eye, center, up) * v_m;
+        Vec3i screen_cords_a((int)screen_cords[0][0], height - (int)screen_cords[1][0], (int)screen_cords[2][0]);
         
-    }*/
+        v_m[0][0] = vertices[this->triangles[i].y].x;
+        v_m[1][0] = vertices[this->triangles[i].y].y;
+        v_m[2][0] = vertices[this->triangles[i].y].z;
+        v_m[3][0] = 1;
+        screen_cords = viewport(0, 0) * lookat(eye, center, up) * v_m;
+        Vec3i screen_cords_b((int)screen_cords[0][0], height - (int)screen_cords[1][0], (int)screen_cords[2][0]);
+
+        v_m[0][0] = vertices[this->triangles[i].z].x;
+        v_m[1][0] = vertices[this->triangles[i].z].y;
+        v_m[2][0] = vertices[this->triangles[i].z].z;
+        v_m[3][0] = 1;
+        screen_cords = viewport(0, 0) * lookat(eye, center, up) * v_m;
+        Vec3i screen_cords_c((int)screen_cords[0][0], height - (int)screen_cords[1][0], (int)screen_cords[2][0]);
+        
+        this->render.draw_line(screen_cords_a.x, screen_cords_a.y, screen_cords_b.x, screen_cords_b.y);
+        this->render.draw_line(screen_cords_a.x, screen_cords_a.y, screen_cords_c.x, screen_cords_c.y);
+        this->render.draw_line(screen_cords_c.x, screen_cords_c.y, screen_cords_b.x, screen_cords_b.y);
+    }
 }

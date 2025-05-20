@@ -23,7 +23,7 @@ Matrix lookat(Vec3f eye, Vec3f center, Vec3f up){
     return ModelView;
 }
 
-Matrix viewport(long double x, long double y) {
+Matrix viewport(long double x, long double y) { // to turn [-1, 1] * [-1, 1] -> [hole width] * [hole height] 
     Matrix m = Matrix::identity(4);
     m[0][3] = x+width/2.f;
     m[1][3] = y+height/2.f;

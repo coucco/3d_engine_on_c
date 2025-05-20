@@ -8,4 +8,4 @@
 
 Matrix lookat(Vec3f eye, Vec3f center, Vec3f up);
 
-Matrix viewport(int x, int y, int w, int h);
+Matrix viewport(long double x, long double y);

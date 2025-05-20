@@ -53,7 +53,7 @@ Matrix::Row Matrix::operator[](size_t row){
 
 Matrix Matrix::operator*(const Matrix &other) const{
     if(n != other.m){
-        std::cout<<"not valid size of matrix \n";
+        std::cout<<"not valid size of matrix: "<<n<<", "<<other.m<<"\n";
         return Matrix(0, 0);
     }
     Matrix result(m, other.n);

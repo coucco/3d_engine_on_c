@@ -11,15 +11,7 @@
 
 int main(int argc, char *argv[]) {
 
-Vec3f eye(0, 0, 5);
-Vec3f center(0, 0, 0);
-Vec3f up(0, 1, 0);
-
-Matrix ModelView = lookat(eye, center, up);
-
-std::cout<<ModelView;
-
-  /*SDL_Window *window = NULL;
+  SDL_Window *window = NULL;
   SDL_Renderer *render = NULL;
 
   SDL_Init(SDL_INIT_EVERYTHING);
@@ -52,6 +44,11 @@ std::cout<<ModelView;
     model.polygon_smooth();
   }
 
+  if (strcmp(argv[2], "camera_movement_provolka") == 0) {
+    Vec3f eye(3, 3, 5), center(0, 0, 0), up(0, 1, 0);
+    model.camera_movement_provolka(eye, center, up);
+  }
+
   SDL_RenderPresent(render);
   bool quit = false;
   while (!quit) {
@@ -66,17 +63,7 @@ std::cout<<ModelView;
 
   SDL_DestroyRenderer(render);
   SDL_DestroyWindow(window); //  удаляем все объекты, заканчиваем работу программы
-  SDL_Quit();*/
+  SDL_Quit();
 
   return 0;
 }
-
-
-/*
-
-camera movement will be called by the function
-
-./main camera_move eye center up
-
-
-*/
