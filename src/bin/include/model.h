@@ -34,15 +34,5 @@ class Model{
 
     Model(const char* model_path, Render render_main);
 
-    void provolka();
-
-    void polygon();
-
-    void zbuffer_check();
-
-    void polygon_smooth();
-
-    void camera_movement_provolka(Vec3f eye, Vec3f center, Vec3f up);
-
     void camera_movement_polygon_smooth(Vec3f eye, Vec3f center, Vec3f up);
 };

@@ -35,41 +35,41 @@ struct Vec2i{
 
 class Vec3f{
     public:
-        long double a;
-        long double b;
-        long double c;
+        long double x;
+        long double y;
+        long double z;
 
-        Vec3f(long double a, long double b, long double c) : a(a), b(b), c(c) {}
+        Vec3f(long double x = 0.0, long double y = 0.0, long double z = 0.0) : x(x), y(y), z(z) {}
 
         Vec3f normalize(){
-            long double length = sqrt(a*a + b*b + c*c);
+            long double length = sqrt(x*x + y*y + z*z);
             return Vec3f{
-                a/length,  // a
-                b/length,   // b
-                c/length    // c
+                x/length,
+                y/length,
+                z/length
             };
         }
 
         float operator[](int i){
-            if (i == 0) return a;
-            if (i == 1) return b;
-            if (i == 2) return c;
+            if (i == 0) return x;
+            if (i == 1) return y;
+            if (i == 2) return z;
             throw std::out_of_range("Vec3f index out of range");
         }
 
         Vec3f operator+(Vec3f other){
             return Vec3f{
-                a + other.a,
-                b + other.b,
-                c + other.c
+                x + other.x,
+                y + other.y,
+                z + other.z
             };
         }
 
         Vec3f operator-(Vec3f other){
             return Vec3f{
-                a - other.a,
-                b - other.b,
-                c - other.c
+                x - other.x,
+                y - other.y,
+                z - other.z
             };
         }
 };

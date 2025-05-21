@@ -17,11 +17,11 @@ Matrix::Matrix(size_t m, size_t n){
 Matrix::Matrix(Vec3f v){
     this->m = 3;
     this->n = 1;
-    std::vector<long double> va(1, v.a);
+    std::vector<long double> va(1, v.x);
     this->a.push_back(va);
-    std::vector<long double> vb(1, v.b);
+    std::vector<long double> vb(1, v.y);
     this->a.push_back(vb);
-    std::vector<long double> vc(1, v.c);
+    std::vector<long double> vc(1, v.z);
     this->a.push_back(vc);
 }
 
