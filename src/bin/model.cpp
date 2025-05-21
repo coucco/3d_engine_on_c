@@ -7,6 +7,7 @@
 #include "custom_structs.h"
 #include "constants.h"
 #include "render.h"
+#include "matrix.h"
 #include "move.h"
 #include <cstdio>
 #include <climits>
@@ -267,7 +268,7 @@ void Model::polygon_smooth(){
 
         Vertex3_normals vertices_normals = {vertex_normals[normal_triangles[i].x], vertex_normals[normal_triangles[i].y], vertex_normals[normal_triangles[i].z]};
 
-        this->render.triangle_smooth(v1, v2, v3, zbuffer, light, vertices_normals);
+        this->render.triangle_smooth(v1, v2, v3, zbuffer, vertices_normals, light);
     }
 }
 
@@ -295,9 +296,43 @@ void Model::camera_movement_provolka(Vec3f eye, Vec3f center, Vec3f up){
         v_m[3][0] = 1;
         screen_cords = viewport(0, 0) * lookat(eye, center, up) * v_m;
         Vec3i screen_cords_c((int)screen_cords[0][0], height - (int)screen_cords[1][0], (int)screen_cords[2][0]);
-        
+
         this->render.draw_line(screen_cords_a.x, screen_cords_a.y, screen_cords_b.x, screen_cords_b.y);
         this->render.draw_line(screen_cords_a.x, screen_cords_a.y, screen_cords_c.x, screen_cords_c.y);
         this->render.draw_line(screen_cords_c.x, screen_cords_c.y, screen_cords_b.x, screen_cords_b.y);
+    }
+}
+
+void Model::camera_movement_polygon_smooth(Vec3f eye, Vec3f center, Vec3f up){
+    for(size_t i = 0; i < width*height; ++i){
+        this->zbuffer[i] = -INT_MAX;       // инициализация zbuffer значениями -inf 
+    }    
+
+    Matrix v_m(4, 1);
+    Matrix M = viewport(0, 0) * lookat(eye, center, up); // делаем цепочку преобразований
+    Vec3i screen_cords[3];
+
+    for(size_t i = 0; i < size(triangles); ++i){      // перебираем треугольники модельки в цикле
+
+        for(int j = 0; j < 3; ++j){
+            v_m[0][0] = vertices[this->triangles[i][j]].x;
+            v_m[1][0] = vertices[this->triangles[i][j]].y;
+            v_m[2][0] = vertices[this->triangles[i][j]].z;
+            v_m[3][0] = 1;
+            Matrix screen_cords_m = M * v_m;  // вычисляем координаты вершин в репере камеры
+            screen_cords[j] = Vec3i((int)screen_cords_m[0][0], height - (int)screen_cords_m[1][0], (int)screen_cords_m[2][0]);
+        }
+
+        Vec3f light = {0.15, 0.2, 0.65};
+        light = light.normalize();
+
+        Vertex3_normals vertices_normals = {vertex_normals[normal_triangles[i].x], vertex_normals[normal_triangles[i].y], vertex_normals[normal_triangles[i].z]};
+        
+        // M * normal_matrix - преобразовываем нормали
+        Matrix normal_matrix(vertices_normals);
+        Matrix new_vertices_matrix = M * normal_matrix;
+        vertices_normals = Vertex3_normals(new_vertices_matrix.a);
+
+        this->render.triangle_smooth(screen_cords[0], screen_cords[1], screen_cords[2], zbuffer, vertices_normals, light);
     }
 }

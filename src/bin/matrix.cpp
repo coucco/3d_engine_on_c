@@ -1,13 +1,13 @@
 #include "matrix.h"
 
+#include "custom_structs.h"
 #include <iostream>
 #include <vector>
 #include <cstddef>
-#include <custom_structs.h>
 
 Matrix::Matrix(size_t m, size_t n){
-    this->m = m;
-    this->n = n;
+    this->m = m; // строк
+    this->n = n; // столбцов
     std::vector<long double> v(n, 0);
     for(size_t i = 0; i < m; ++i){
         this->a.push_back(v);
@@ -23,6 +23,41 @@ Matrix::Matrix(Vec3f v){
     this->a.push_back(vb);
     std::vector<long double> vc(1, v.c);
     this->a.push_back(vc);
+}
+
+/*Matrix::Matrix(std::vector<std::vector<long double> > mat){
+    this->m = mat.size();
+    this->n = mat[0].size();
+    for (size_t i = 0; i < m; ++i)
+      for(size_t j = 0; j < n; ++j)
+        this->a[i][j] = m[i][j];
+}*/
+
+Matrix::Matrix(Vertex3_normals vertices_normals){ // конструктор запишет в матрицу векторы нормали как столбцы в однородных координатах(дополнит векторы нормали нулями)
+
+    this->m = 4;
+    this->n = 3;
+
+    std::vector<long double> v(n, 0);
+    for(size_t i = 0; i < m; ++i){
+        this->a.push_back(v);
+    }
+    
+    a[0][0] = vertices_normals.a.x;
+    a[0][1] = vertices_normals.b.x;
+    a[0][2] = vertices_normals.c.x;
+    
+    a[1][0] = vertices_normals.a.y;
+    a[1][1] = vertices_normals.b.y;
+    a[1][2] = vertices_normals.c.y;
+
+    a[2][0] = vertices_normals.a.z;
+    a[2][1] = vertices_normals.b.z;
+    a[2][2] = vertices_normals.c.z;
+
+    a[3][0] = 0.0L;
+    a[3][1] = 0.0L;
+    a[3][2] = 0.0L;
 }
 
 Matrix Matrix::identity(size_t n){
@@ -78,4 +113,14 @@ Matrix& Matrix::sanitize(){
             }
         }
         return *this;
+}
+
+Matrix Matrix::get_transpose(){
+        Matrix t_mat(n, m);
+        for (size_t j = 0; j < n; ++j) {
+            for (size_t i = 0; i < m; ++i) {
+                t_mat[j][i] = a[i][j];
+            }
+        }
+        return t_mat;
 }

@@ -2,6 +2,7 @@
 
 #include "../../lib/SDL/include/SDL.h"
 #include <cmath>
+#include <vector>
 #include <stdexcept>
 
 struct Vec3i{
@@ -9,7 +10,22 @@ struct Vec3i{
     int y;
     int z;
 
+    Vec3i() : x(0), y(0), z(0) {}
+
     Vec3i(int x_, int y_, int z_) : x(x_), y(y_), z(z_) {}
+
+    int operator[](int i){
+        if (i == 0) return x;
+        if (i == 1) return y;
+        if (i == 2) return z;
+        throw std::out_of_range("Vec3i index out of range");
+    }
+
+    void operator=(Vec3i other){
+        this->x = other.x;
+        this->y = other.y;
+        this->z = other.z;
+    }
 };
 
 struct Vec2i{
@@ -88,8 +104,26 @@ struct Norm_vector{
     long double z;
 };
 
-struct Vertex3_normals{
+class Vertex3_normals{
+    public:
+
     Norm_vector a;
     Norm_vector b;
     Norm_vector c;
+
+    Vertex3_normals(Norm_vector a, Norm_vector b, Norm_vector c) : a(a), b(b), c(c) {}
+
+    Vertex3_normals(std::vector<std::vector<long double> > mat){ // конструктор для обратного получения нормалей из матрицы
+        this->a.x = mat[0][0];
+        this->b.x = mat[0][1];
+        this->c.x = mat[0][2];
+
+        this->a.y = mat[1][0];
+        this->b.y = mat[1][1];
+        this->c.y = mat[1][2];
+
+        this->a.z = mat[2][0];
+        this->b.z = mat[2][1];
+        this->c.z = mat[2][2];
+    }
 };

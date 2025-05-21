@@ -139,7 +139,7 @@ void Render::triangle(Vec3i a, Vec3i b, Vec3i c, Color color, std::vector<long d
     }
 }
 
-void Render::triangle_smooth(Vec3i a, Vec3i b, Vec3i c, std::vector<long double> &zbuffer, Vec3f light, Vertex3_normals vertex_normals){
+void Render::triangle_smooth(Vec3i a, Vec3i b, Vec3i c, std::vector<long double> &zbuffer, Vertex3_normals vertex_normals, Vec3f light){
 
     if (a.y == b.y && a.y == c.y){
         return;

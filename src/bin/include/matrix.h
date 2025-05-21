@@ -1,9 +1,9 @@
 #pragma once
 
+#include "custom_structs.h"
 #include <iostream>
 #include <vector>
 #include <cstddef>
-#include <custom_structs.h>
 
 class Matrix{
     public:
@@ -14,6 +14,10 @@ class Matrix{
         Matrix(size_t m, size_t n);
 
         Matrix(Vec3f v);
+
+        Matrix(std::vector<std::vector<long double> > m);
+
+        Matrix(Vertex3_normals vertices_normals);
 
         static Matrix identity(size_t n);
 
@@ -36,4 +40,6 @@ class Matrix{
         Row operator[](size_t row);
 
         Matrix& sanitize();
+
+        Matrix get_transpose();
 };

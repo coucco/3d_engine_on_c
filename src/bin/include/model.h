@@ -7,6 +7,7 @@
 #include "custom_structs.h"
 #include "constants.h"
 #include "render.h"
+#include "matrix.h"
 #include "move.h"
 #include <cstdio>
 #include <climits>
@@ -42,4 +43,6 @@ class Model{
     void polygon_smooth();
 
     void camera_movement_provolka(Vec3f eye, Vec3f center, Vec3f up);
+
+    void camera_movement_polygon_smooth(Vec3f eye, Vec3f center, Vec3f up);
 };

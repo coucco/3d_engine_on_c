@@ -49,6 +49,11 @@ int main(int argc, char *argv[]) {
     model.camera_movement_provolka(eye, center, up);
   }
 
+  if (strcmp(argv[2], "camera_movement_polygon_smooth") == 0) {
+    Vec3f eye(1, 0, 2), center(0, 0, 0), up(0, 1, 0);
+    model.camera_movement_polygon_smooth(eye, center, up);
+  }
+
   SDL_RenderPresent(render);
   bool quit = false;
   while (!quit) {

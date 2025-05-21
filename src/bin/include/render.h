@@ -21,5 +21,5 @@ class Render{
 
     void triangle(Vec3i a, Vec3i b, Vec3i c, Color color, std::vector<long double> &zbuffer);
 
-    void triangle_smooth(Vec3i a, Vec3i b, Vec3i c, std::vector<long double> &zbuffer, Vec3f light, Vertex3_normals vertex_normals);
+    void triangle_smooth(Vec3i a, Vec3i b, Vec3i c, std::vector<long double> &zbuffer, Vertex3_normals vertex_normals, Vec3f light);
 };
