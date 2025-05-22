@@ -194,17 +194,17 @@ void Render::triangle_smooth(Vec3i a, Vec3i b, Vec3i c, std::vector<long double>
                     zbuffer[x + y * width] = z;
                     Vec3i point = {x, y, static_cast<int>(z)};
                     Vec3f koefs = baricentric_koefs(a, b, c, point);
-                    nx = koefs.a * vertex_normals.a.x + koefs.b * vertex_normals.b.x + koefs.c * vertex_normals.c.x;
-                    ny = koefs.a * vertex_normals.a.y + koefs.b * vertex_normals.b.y + koefs.c * vertex_normals.c.y;   // интерполируем нормаль внутри треугольника
-                    nz = koefs.a * vertex_normals.a.z + koefs.b * vertex_normals.b.z + koefs.c * vertex_normals.c.z;
+                    nx = koefs.x * vertex_normals.a.x + koefs.y * vertex_normals.b.x + koefs.z * vertex_normals.c.x;
+                    ny = koefs.x * vertex_normals.a.y + koefs.y * vertex_normals.b.y + koefs.z * vertex_normals.c.y;    // интерполируем нормаль внутри треугольника
+                    nz = koefs.x * vertex_normals.a.z + koefs.y * vertex_normals.b.z + koefs.z * vertex_normals.c.z;
                     length = sqrt(nx * nx + ny * ny + nz * nz);
                     nx /= length;
                     ny /= length;
                     nz /= length;
-                    intensity = light.a * nx + light.b * ny + light.c * nz;
-                    Uint8 r = intensity * 255, g = intensity * 255, b = intensity * 255;
-                    Color color = {r, g, b};
+                    intensity = light.x * nx + light.y * ny + light.z * nz;
                     if(intensity > 0){
+                        Uint8 r = intensity * 255, g = intensity * 255, b = intensity * 255;
+                        Color color = {r, g, b};
                         SDL_SetRenderDrawColor(this->render, color.r, color.g, color.b, 255);
                         SDL_RenderDrawPoint(this->render, x, y);
                     }
@@ -244,17 +244,17 @@ void Render::triangle_smooth(Vec3i a, Vec3i b, Vec3i c, std::vector<long double>
                     zbuffer[x + y * width] = z;
                     Vec3i point = {x, y, static_cast<int>(z)};
                     Vec3f koefs = baricentric_koefs(a, b, c, point);
-                    nx = koefs.a * vertex_normals.a.x + koefs.b * vertex_normals.b.x + koefs.c * vertex_normals.c.x;
-                    ny = koefs.a * vertex_normals.a.y + koefs.b * vertex_normals.b.y + koefs.c * vertex_normals.c.y;    // интерполируем нормаль внутри треугольника
-                    nz = koefs.a * vertex_normals.a.z + koefs.b * vertex_normals.b.z + koefs.c * vertex_normals.c.z;
+                    nx = koefs.x * vertex_normals.a.x + koefs.y * vertex_normals.b.x + koefs.z * vertex_normals.c.x;
+                    ny = koefs.x * vertex_normals.a.y + koefs.y * vertex_normals.b.y + koefs.z * vertex_normals.c.y;    // интерполируем нормаль внутри треугольника
+                    nz = koefs.x * vertex_normals.a.z + koefs.y * vertex_normals.b.z + koefs.z * vertex_normals.c.z;
                     length = sqrt(nx * nx + ny * ny + nz * nz);
                     nx /= length;
                     ny /= length;
                     nz /= length;
-                    intensity = light.a * nx + light.b * ny + light.c * nz;
-                    Uint8 r = intensity * 255, g = intensity * 255, b = intensity * 255;
-                    Color color = {r, g, b};
+                    intensity = light.x * nx + light.y * ny + light.z * nz;
                     if(intensity > 0){
+                        Uint8 r = intensity * 255, g = intensity * 255, b = intensity * 255;
+                        Color color = {r, g, b};
                         SDL_SetRenderDrawColor(this->render, color.r, color.g, color.b, 255);
                         SDL_RenderDrawPoint(this->render, x, y);
                     }

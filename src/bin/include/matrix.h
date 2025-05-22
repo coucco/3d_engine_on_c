@@ -13,6 +13,8 @@ class Matrix{
 
         Matrix(size_t m, size_t n);
 
+        Matrix(const Matrix& other);
+
         Matrix(Vec3f v);
 
         Matrix(std::vector<std::vector<long double> > m);
@@ -42,4 +44,6 @@ class Matrix{
         Matrix& sanitize();
 
         Matrix get_transpose();
+
+        Matrix get_inverse();
 };

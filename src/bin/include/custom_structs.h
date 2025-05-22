@@ -4,6 +4,7 @@
 #include <cmath>
 #include <vector>
 #include <stdexcept>
+#include <iostream>
 
 struct Vec3i{
     int x;
@@ -35,42 +36,51 @@ struct Vec2i{
 
 class Vec3f{
     public:
-        long double a;
-        long double b;
-        long double c;
+        long double x;
+        long double y;
+        long double z;
 
-        Vec3f(long double a, long double b, long double c) : a(a), b(b), c(c) {}
+        Vec3f(long double x = 0.0, long double y = 0.0, long double z = 0.0) : x(x), y(y), z(z) {}
 
         Vec3f normalize(){
-            long double length = sqrt(a*a + b*b + c*c);
+            long double length = sqrt(x*x + y*y + z*z);
             return Vec3f{
-                a/length,  // a
-                b/length,   // b
-                c/length    // c
+                x/length,
+                y/length,
+                z/length
             };
         }
 
         float operator[](int i){
-            if (i == 0) return a;
-            if (i == 1) return b;
-            if (i == 2) return c;
+            if (i == 0) return x;
+            if (i == 1) return y;
+            if (i == 2) return z;
             throw std::out_of_range("Vec3f index out of range");
         }
 
         Vec3f operator+(Vec3f other){
             return Vec3f{
-                a + other.a,
-                b + other.b,
-                c + other.c
+                x + other.x,
+                y + other.y,
+                z + other.z
             };
         }
 
         Vec3f operator-(Vec3f other){
             return Vec3f{
-                a - other.a,
-                b - other.b,
-                c - other.c
+                x - other.x,
+                y - other.y,
+                z - other.z
             };
+        }
+
+        Vec3f& operator=(const Vec3f& other) {
+            if (this != &other) {
+                x = other.x;
+                y = other.y;
+                z = other.z;
+            }
+            return *this;
         }
 };
 
@@ -98,20 +108,14 @@ struct Texture_2d_cord{
     long double y;
 };
 
-struct Norm_vector{
-    long double x;
-    long double y;
-    long double z;
-};
-
 class Vertex3_normals{
     public:
 
-    Norm_vector a;
-    Norm_vector b;
-    Norm_vector c;
+    Vec3f a;
+    Vec3f b;
+    Vec3f c;
 
-    Vertex3_normals(Norm_vector a, Norm_vector b, Norm_vector c) : a(a), b(b), c(c) {}
+    Vertex3_normals(Vec3f a, Vec3f b, Vec3f c) : a(a), b(b), c(c) {}
 
     Vertex3_normals(std::vector<std::vector<long double> > mat){ // конструктор для обратного получения нормалей из матрицы
         this->a.x = mat[0][0];
@@ -125,5 +129,9 @@ class Vertex3_normals{
         this->a.z = mat[2][0];
         this->b.z = mat[2][1];
         this->c.z = mat[2][2];
+
+        this->a = (this->a).normalize();
+        this->b = (this->b).normalize();
+        this->c = (this->c).normalize();
     }
 };

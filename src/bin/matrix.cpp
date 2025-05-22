@@ -14,14 +14,16 @@ Matrix::Matrix(size_t m, size_t n){
     }
 }
 
+Matrix::Matrix(const Matrix& other) : m(other.m), n(other.n), a(other.a) {}
+
 Matrix::Matrix(Vec3f v){
     this->m = 3;
     this->n = 1;
-    std::vector<long double> va(1, v.a);
+    std::vector<long double> va(1, v.x);
     this->a.push_back(va);
-    std::vector<long double> vb(1, v.b);
+    std::vector<long double> vb(1, v.y);
     this->a.push_back(vb);
-    std::vector<long double> vc(1, v.c);
+    std::vector<long double> vc(1, v.z);
     this->a.push_back(vc);
 }
 
@@ -123,4 +125,61 @@ Matrix Matrix::get_transpose(){
             }
         }
         return t_mat;
+}
+
+Matrix Matrix::get_inverse() {
+        if (m != n) {
+            throw std::runtime_error("Matrix must be square to compute inverse");
+        }
+
+        size_t n = m;
+        Matrix inverse(n, n);
+        Matrix temp(*this); // Копия исходной матрицы
+
+        // Создаем единичную матрицу
+        for (size_t i = 0; i < n; ++i) {
+            inverse.a[i][i] = 1.0;
+        }
+
+        // Прямой ход метода Гаусса
+        for (size_t k = 0; k < n; ++k) {
+            // Поиск ведущего элемента
+            size_t max_row = k;
+            for (size_t i = k + 1; i < n; ++i) {
+                if (std::abs(temp.a[i][k]) > std::abs(temp.a[max_row][k])) {
+                    max_row = i;
+                }
+            }
+
+            // Перестановка строк
+            if (max_row != k) {
+                std::swap(temp.a[k], temp.a[max_row]);
+                std::swap(inverse.a[k], inverse.a[max_row]);
+            }
+
+            // Проверка на вырожденность
+            if (std::abs(temp.a[k][k]) < 1e-12) {
+                throw std::runtime_error("Matrix is singular (non-invertible)");
+            }
+
+            // Нормализация строки
+            long double div = temp.a[k][k];
+            for (size_t j = 0; j < n; ++j) {
+                temp.a[k][j] /= div;
+                inverse.a[k][j] /= div;
+            }
+
+            // Исключение
+            for (size_t i = 0; i < n; ++i) {
+                if (i != k && std::abs(temp.a[i][k]) > 1e-12) {
+                    long double factor = temp.a[i][k];
+                    for (size_t j = 0; j < n; ++j) {
+                        temp.a[i][j] -= temp.a[k][j] * factor;
+                        inverse.a[i][j] -= inverse.a[k][j] * factor;
+                    }
+                }
+            }
+        }
+
+        return inverse;
 }

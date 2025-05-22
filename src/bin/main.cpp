@@ -36,7 +36,8 @@ int main(int argc, char *argv[]) {
   }
 
   if (strcmp(argv[2], "zbuffer_check") == 0) {
-    model.polygon();
+    Vec3f eye(1, 1, 1), center(0, 0, 0), up(0, 1, 0);
+    model.camera_movement_polygon_smooth(eye, center, up);
     model.zbuffer_check();
   }
 
@@ -50,7 +51,7 @@ int main(int argc, char *argv[]) {
   }
 
   if (strcmp(argv[2], "camera_movement_polygon_smooth") == 0) {
-    Vec3f eye(1, 0, 2), center(0, 0, 0), up(0, 1, 0);
+    Vec3f eye(1, 0.5, 1), center(0, 0, 0), up(0, 1, 0);
     model.camera_movement_polygon_smooth(eye, center, up);
   }
 
