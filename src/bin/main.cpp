@@ -6,6 +6,7 @@
 #include "move.h"
 #include "my_math.h"
 #include "render.h"
+#include <chrono>
 #include <cstring>
 #include <iostream>
 
@@ -27,33 +28,10 @@ int main(int argc, char *argv[]) {
 
   Model model(const_char_model_path, main_render);
 
-  if (strcmp(argv[2], "provolka") == 0) {
-    model.provolka();
-  }
+  auto start = std::chrono::high_resolution_clock::now();
 
-  if (strcmp(argv[2], "polygon") == 0) {
-    model.polygon();
-  }
-
-  if (strcmp(argv[2], "zbuffer_check") == 0) {
-    Vec3f eye(1, 1, 1), center(0, 0, 0), up(0, 1, 0);
-    model.camera_movement_polygon_smooth(eye, center, up);
-    model.zbuffer_check();
-  }
-
-  if (strcmp(argv[2], "polygon_smooth") == 0) {
-    model.polygon_smooth();
-  }
-
-  if (strcmp(argv[2], "camera_movement_provolka") == 0) {
-    Vec3f eye(3, 3, 5), center(0, 0, 0), up(0, 1, 0);
-    model.camera_movement_provolka(eye, center, up);
-  }
-
-  if (strcmp(argv[2], "camera_movement_polygon_smooth") == 0) {
-    Vec3f eye(1, 0.5, 1), center(0, 0, 0), up(0, 1, 0);
-    model.camera_movement_polygon_smooth(eye, center, up);
-  }
+  Vec3f eye(1, 0, 2), center(0, 0, 0), up(0, 1, 0);
+  model.camera_movement_polygon_smooth(eye, center, up);
 
   SDL_RenderPresent(render);
   bool quit = false;

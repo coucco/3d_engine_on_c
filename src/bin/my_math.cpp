@@ -24,8 +24,8 @@ Vec3f baricentric_koefs(Vec3i a, Vec3i b, Vec3i c, Vec3i point){
 
 Vec3f cross(Vec3f a, Vec3f b){
     return Vec3f{
-        a.y * b.z - a.z * b.y,  // a
-        a.z * b.x - a.x * b.z,   // b
-        a.x * b.y - a.y * b.x    // c
+        a.y * b.z - a.z * b.y,
+        a.z * b.x - a.x * b.z,
+        a.x * b.y - a.y * b.x
     };
 }
