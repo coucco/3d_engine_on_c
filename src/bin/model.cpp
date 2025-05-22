@@ -55,7 +55,7 @@ Model::Model(const char* model_path, Render render_main){
         }
         if(s == "vn") {
             std::cin >> x >> y >> z;
-            Norm_vector normal = {x, y, z};
+            Vec3f normal = {x, y, z};
             this->vertex_normals.push_back(normal);
         }
         if(s == "f") {
@@ -149,7 +149,8 @@ void Model::camera_movement_polygon_smooth(Vec3f eye, Vec3f center, Vec3f up){
     }    
 
     Matrix v_m(4, 1);
-    Matrix M = viewport(0, 0) * lookat(eye, center, up); // делаем цепочку преобразований
+    Matrix ModelView = lookat(eye, center, up);
+    Matrix M = viewport(0, 0) * ModelView; // делаем цепочку преобразований
     Vec3i screen_cords[3];
 
     for(size_t i = 0; i < size(triangles); ++i){      // перебираем треугольники модельки в цикле
@@ -170,7 +171,7 @@ void Model::camera_movement_polygon_smooth(Vec3f eye, Vec3f center, Vec3f up){
         
         // M * normal_matrix - преобразовываем нормали
         Matrix normal_matrix(vertices_normals);
-        Matrix new_vertices_matrix = M * normal_matrix;
+        Matrix new_vertices_matrix = ModelView.get_inverse().get_transpose() * normal_matrix;
         vertices_normals = Vertex3_normals(new_vertices_matrix.a);
 
         this->render.triangle_smooth(screen_cords[0], screen_cords[1], screen_cords[2], zbuffer, vertices_normals, light);

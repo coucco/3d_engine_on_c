@@ -73,16 +73,16 @@ void Render::triangle_smooth(Vec3i a, Vec3i b, Vec3i c, std::vector<long double>
                     Vec3i point = {x, y, static_cast<int>(z)};
                     Vec3f koefs = baricentric_koefs(a, b, c, point);
                     nx = koefs.x * vertex_normals.a.x + koefs.y * vertex_normals.b.x + koefs.z * vertex_normals.c.x;
-                    ny = koefs.x * vertex_normals.a.y + koefs.y * vertex_normals.b.y + koefs.z * vertex_normals.c.y;   // интерполируем нормаль внутри треугольника
+                    ny = koefs.x * vertex_normals.a.y + koefs.y * vertex_normals.b.y + koefs.z * vertex_normals.c.y;    // интерполируем нормаль внутри треугольника
                     nz = koefs.x * vertex_normals.a.z + koefs.y * vertex_normals.b.z + koefs.z * vertex_normals.c.z;
                     length = sqrt(nx * nx + ny * ny + nz * nz);
                     nx /= length;
                     ny /= length;
                     nz /= length;
                     intensity = light.x * nx + light.y * ny + light.z * nz;
-                    Uint8 r = intensity * 255, g = intensity * 255, b = intensity * 255;
-                    Color color = {r, g, b};
                     if(intensity > 0){
+                        Uint8 r = intensity * 255, g = intensity * 255, b = intensity * 255;
+                        Color color = {r, g, b};
                         SDL_SetRenderDrawColor(this->render, color.r, color.g, color.b, 255);
                         SDL_RenderDrawPoint(this->render, x, y);
                     }
@@ -130,9 +130,9 @@ void Render::triangle_smooth(Vec3i a, Vec3i b, Vec3i c, std::vector<long double>
                     ny /= length;
                     nz /= length;
                     intensity = light.x * nx + light.y * ny + light.z * nz;
-                    Uint8 r = intensity * 255, g = intensity * 255, b = intensity * 255;
-                    Color color = {r, g, b};
                     if(intensity > 0){
+                        Uint8 r = intensity * 255, g = intensity * 255, b = intensity * 255;
+                        Color color = {r, g, b};
                         SDL_SetRenderDrawColor(this->render, color.r, color.g, color.b, 255);
                         SDL_RenderDrawPoint(this->render, x, y);
                     }

@@ -33,12 +33,6 @@ int main(int argc, char *argv[]) {
   Vec3f eye(1, 0, 2), center(0, 0, 0), up(0, 1, 0);
   model.camera_movement_polygon_smooth(eye, center, up);
 
-  auto end = std::chrono::high_resolution_clock::now();
-
-  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-
-  std::cout << "camera_movement_polygon_smooth on " << model_name <<" execution time: " << duration.count() << " microseconds" << std::endl;
-
   SDL_RenderPresent(render);
   bool quit = false;
   while (!quit) {

@@ -4,6 +4,7 @@
 #include <cmath>
 #include <vector>
 #include <stdexcept>
+#include <iostream>
 
 struct Vec3i{
     int x;
@@ -72,6 +73,15 @@ class Vec3f{
                 z - other.z
             };
         }
+
+        Vec3f& operator=(const Vec3f& other) {
+            if (this != &other) {
+                x = other.x;
+                y = other.y;
+                z = other.z;
+            }
+            return *this;
+        }
 };
 
 struct Vec4f{
@@ -98,24 +108,14 @@ struct Texture_2d_cord{
     long double y;
 };
 
-struct Norm_vector{
-    long double x;
-    long double y;
-    long double z;
-
-    /*static Norm_vector get_interpolation(){
-        
-    }*/
-};
-
 class Vertex3_normals{
     public:
 
-    Norm_vector a;
-    Norm_vector b;
-    Norm_vector c;
+    Vec3f a;
+    Vec3f b;
+    Vec3f c;
 
-    Vertex3_normals(Norm_vector a, Norm_vector b, Norm_vector c) : a(a), b(b), c(c) {}
+    Vertex3_normals(Vec3f a, Vec3f b, Vec3f c) : a(a), b(b), c(c) {}
 
     Vertex3_normals(std::vector<std::vector<long double> > mat){ // конструктор для обратного получения нормалей из матрицы
         this->a.x = mat[0][0];
@@ -129,5 +129,9 @@ class Vertex3_normals{
         this->a.z = mat[2][0];
         this->b.z = mat[2][1];
         this->c.z = mat[2][2];
+
+        this->a = (this->a).normalize();
+        this->b = (this->b).normalize();
+        this->c = (this->c).normalize();
     }
 };
