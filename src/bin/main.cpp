@@ -6,6 +6,7 @@
 #include "move.h"
 #include "my_math.h"
 #include "render.h"
+#include <chrono>
 #include <cstring>
 #include <iostream>
 
@@ -27,10 +28,16 @@ int main(int argc, char *argv[]) {
 
   Model model(const_char_model_path, main_render);
 
-  if (strcmp(argv[2], "camera_movement_polygon_smooth") == 0) {
-    Vec3f eye(1, 0, 2), center(0, 0, 0), up(0, 1, 0);
-    model.camera_movement_polygon_smooth(eye, center, up);
-  }
+  auto start = std::chrono::high_resolution_clock::now();
+
+  Vec3f eye(1, 0, 2), center(0, 0, 0), up(0, 1, 0);
+  model.camera_movement_polygon_smooth(eye, center, up);
+
+  auto end = std::chrono::high_resolution_clock::now();
+
+  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+
+  std::cout << "camera_movement_polygon_smooth on " << model_name <<" execution time: " << duration.count() << " microseconds" << std::endl;
 
   SDL_RenderPresent(render);
   bool quit = false;

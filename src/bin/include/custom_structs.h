@@ -102,6 +102,10 @@ struct Norm_vector{
     long double x;
     long double y;
     long double z;
+
+    /*static Norm_vector get_interpolation(){
+        
+    }*/
 };
 
 class Vertex3_normals{
